@@ -1,37 +1,14 @@
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const genAI = new GoogleGenerativeAI(
+  import.meta.env.VITE_GEMINI_API_KEY
+);
+
+const model = genAI.getGenerativeModel({
+  model: "gemini-3.5-flash"
+});
 
 export async function generateContent(prompt) {
-  const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: prompt,
-              },
-            ],
-          },
-        ],
-      }),
-    }
-  );
-
-  const data = await response.json();
-
-  console.log(data);
-
-  if (!response.ok) {
-    throw new Error(JSON.stringify(data));
-  }
-
-  return (
-    data.candidates?.[0]?.content?.parts?.[0]?.text ||
-    "No content generated."
-  );
+  const result = await model.generateContent(prompt);
+  return result.response.text();
 }

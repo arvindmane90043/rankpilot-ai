@@ -1,6 +1,7 @@
-console.log("AIContentWriter Loaded");
 import { useState } from "react";
 import { generateContent } from "../services/aiService";
+
+console.log("AIContentWriter Loaded");
 
 function AIContentWriter() {
   const [keyword, setKeyword] = useState("");
